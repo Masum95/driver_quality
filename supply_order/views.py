@@ -1,38 +1,26 @@
-import json
-
-# from coreapp.pagination import CustomPagination
+from django.http import JsonResponse
 from rest_framework import generics
 
-from supply_order import models
+from supply_order import models, enums
 from supply_order import serializers
+from supply_order import pagination
+
 
 class SupplyOrderListCreateAPIView(generics.ListCreateAPIView):
 
     """
-        **List/Create Feedback**
+        **List/Create SupplyOrder**
     """
     serializer_class = serializers.SupplyOrderSerializer
-    # pagination_class = pagination.CustomPagination
-    queryset = models.SupplyOrder.objects.all()
+    pagination_class = pagination.CustomPagination
+    queryset = models.SupplyOrder.supply_orders.all()
 
-    # todo: make search query_param to search_text
-    # todo: add swagger doc
     def filter_queryset(self, queryset):
         query_params = self.request.query_params
-        if 'search' in query_params:
-            queryset = queryset.search(search_text=query_params.get('search'))
-        if 'address' in query_params:
-            queryset = queryset.address(address_uuid=query_params.get('address'))
-        if 'country' in query_params:
-            queryset = queryset.country(country=query_params.get('country'))
-        if 'workplace' in query_params:
-            queryset = queryset.workplace(workplace_uuid=query_params.get('workplace'))
-        if 'department' in query_params or 'batch' in query_params:
-            queryset = queryset.filter_by_batch_department(
-                batch=query_params.get('batch'),
-                department=query_params.get('department')
-            )
-
+        if 'supply_id' in query_params:
+            queryset = queryset.get_orders_aginst_supply_id(supply_id=query_params.get('supply_id'))
+        if 'how_many_last' in query_params:
+            queryset = queryset.get_last_n_records(n=query_params.get('how_many_last'))
         return queryset
 
     def get(self, request, *args, **kwargs):
@@ -40,3 +28,68 @@ class SupplyOrderListCreateAPIView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         return super(SupplyOrderListCreateAPIView, self).post(request, *args, **kwargs)
+
+
+class SupplyOrderCountListAPIView(generics.ListAPIView):
+
+    """
+        **List/Create SupplyOrder**
+    """
+    serializer_class = serializers.SupplyOrderCountSerializer
+    # pagination_class = pagination.CustomPagination
+    queryset = models.SupplyOrder.supply_orders.all()
+
+    def filter_queryset(self, queryset):
+        query_params = self.request.query_params
+        if 'supply_id' in query_params:
+            queryset = queryset.get_orders_aginst_supply_id(supply_id=query_params.get('supply_id'))
+        if 'how_many_last' in query_params:
+            queryset = queryset.get_last_n_records(n=query_params.get('how_many_last'))
+        print(queryset.count())
+        return queryset.count()
+
+    def get(self, request, *args, **kwargs):
+        return super(SupplyOrderCountListAPIView, self).get(request, *args, **kwargs)
+
+
+def get_message(percent):
+    if 0 <= percent <= 0.5:
+        return """Your completion rate is very low.You will get suspended if you do
+        not increase your completion rate."""
+
+    if 0.51 <= percent <= 0.70:
+        return """Your completion rate is low. You will get less requests if you do
+                not increase your completion rate."""
+
+    if 0.71 <= percent <= 1.0:
+        return """Please complete more to get more
+                requests."""
+
+
+def supply_order_count(request):
+    queryset = models.SupplyOrder.supply_orders.all()
+    query_params = request.GET
+
+    if 'supply_id' in query_params:
+        queryset = queryset.get_orders_aginst_supply_id(supply_id=query_params.get('supply_id'))
+
+    if 'how_many_last' in query_params:
+        queryset = queryset.get_last_n_records(n=query_params.get('how_many_last'))
+
+    queryset_status = queryset.values('status')
+    print(queryset.count())
+    total = queryset.count()
+    percent = 0
+    if total == 0:
+        return JsonResponse({"error_message": "Sorry! Driver not found"}, safe=False, status=404)
+    elif total < 100:
+        percent = 0.85
+    else:
+        completed = 0
+        for row in list(queryset_status):
+            if row['status'] == enums.StatusChoices.COMPLETED.name:
+                completed += 1
+        percent = completed/total
+
+    return JsonResponse({'percent': percent,
+                         'message': get_message(percent=percent)}, safe=False)  # or JsonResponse({'data': data})

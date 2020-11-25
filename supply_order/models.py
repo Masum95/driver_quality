@@ -11,7 +11,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
 from django.utils import timezone
 
-from supply_order import enums
+from supply_order import enums, querysets
 from supply_order.enums import *
 
 # from .managers import *
@@ -29,7 +29,7 @@ class SupplyOrder(models.Model):
         choices=enums.StatusChoices.choices,
         blank=False
     )
-
+    objects = querysets.SupplyQuerySet.as_manager()
     # def get_react_count(self):
     #     return self.reacts_set.count
 

@@ -8,7 +8,9 @@ app_name = 'supply_order'
 
 urlpatterns = [
 
-    path('supply/', views.SupplyOrderListCreateAPIView.as_view(), name='supply_order_list_create'),
+    path('details/', views.SupplyOrderListCreateAPIView.as_view(), name='supply_order_list_create'),
+    path('count/', views.supply_order_count, name='supply_order_list_count'),
+
     # path('feedbacks/myfeedbacks/', feedback.MyFeedbackListAPIView.as_view(), name='my_workplace_feedback_list'),
     #
     # path('feedbacks/<str:uuid>/', feedback.FeedbackRetrieveUpdateDestroyAPIView.as_view(), name='workplace_feedback_manipulate'),

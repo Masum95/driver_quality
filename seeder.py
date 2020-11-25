@@ -35,8 +35,8 @@ def random_date():
 def getRandomOrderStatus():
     k = random.randint(0, 1)  # decide on k once
     if k == 0:
-        return "COMPLETED"
-    return "CANCELLED"
+        return "COM"
+    return "CAN"
 
 
 def get_random_driver_id():
