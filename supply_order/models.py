@@ -1,6 +1,8 @@
 
 # Create your models here.
 import uuid
+
+
 from django.db import models
 from django.db.models import Model
 
@@ -15,11 +17,13 @@ from supply_order.enums import *
 # from .managers import *
 
 
+
+
 class SupplyOrder(models.Model):
     puid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     timestamp = models.DateTimeField(auto_now=False)
     supply_id = models.BigIntegerField()
-    order_id = models.UUIDField(unique=True, default=uuid.uuid4)
+    order_id = models.CharField(max_length=128)
     status = models.CharField(
         max_length=4,
         choices=enums.StatusChoices.choices,
