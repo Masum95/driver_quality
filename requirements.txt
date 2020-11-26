@@ -6,3 +6,5 @@ djangorestframework==3.11.0
 pytz==2020.4
 sqlparse==0.4.1
 six==1.15.0
+psycopg2-binary>=2.8
+python-dotenv==0.13.0

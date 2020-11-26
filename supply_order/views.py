@@ -13,7 +13,7 @@ class SupplyOrderListCreateAPIView(generics.ListCreateAPIView):
     """
     serializer_class = serializers.SupplyOrderSerializer
     pagination_class = pagination.CustomPagination
-    queryset = models.SupplyOrder.supply_orders.all()
+    queryset = models.SupplyOrder.objects.all()
 
     def filter_queryset(self, queryset):
         query_params = self.request.query_params
@@ -28,29 +28,6 @@ class SupplyOrderListCreateAPIView(generics.ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         return super(SupplyOrderListCreateAPIView, self).post(request, *args, **kwargs)
-
-
-class SupplyOrderCountListAPIView(generics.ListAPIView):
-
-    """
-        **List/Create SupplyOrder**
-    """
-    serializer_class = serializers.SupplyOrderCountSerializer
-    # pagination_class = pagination.CustomPagination
-    queryset = models.SupplyOrder.supply_orders.all()
-
-    def filter_queryset(self, queryset):
-        query_params = self.request.query_params
-        if 'supply_id' in query_params:
-            queryset = queryset.get_orders_aginst_supply_id(supply_id=query_params.get('supply_id'))
-        if 'how_many_last' in query_params:
-            queryset = queryset.get_last_n_records(n=query_params.get('how_many_last'))
-        print(queryset.count())
-        return queryset.count()
-
-    def get(self, request, *args, **kwargs):
-        return super(SupplyOrderCountListAPIView, self).get(request, *args, **kwargs)
-
 
 def get_message(percent):
     if 0 <= percent <= 0.5:
@@ -67,7 +44,7 @@ def get_message(percent):
 
 
 def supply_order_count(request):
-    queryset = models.SupplyOrder.supply_orders.all()
+    queryset = models.SupplyOrder.objects.all()
     query_params = request.GET
 
     if 'supply_id' in query_params:
