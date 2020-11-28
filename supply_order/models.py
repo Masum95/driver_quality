@@ -16,9 +16,6 @@ from supply_order.enums import *
 
 # from .managers import *
 
-
-
-
 class SupplyOrder(models.Model):
     puid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     timestamp = models.DateTimeField(auto_now=False)
@@ -41,7 +38,7 @@ class SupplyOrder(models.Model):
         verbose_name = "SupplyOrder"
         verbose_name_plural = "SupplyOrders"
         indexes = [
-            models.Index(fields=['timestamp']),
+            models.Index(fields=['supply_id' ])
         ]
 
     def __str__(self):
@@ -53,4 +50,4 @@ class SupplyOrder(models.Model):
         )
 
     def get_absolute_url(self):
-        return reverse("supply_order:supply_order_manipulate", kwargs={"uuid": self.uuid})
+        return reverse("supply_order:supply_order_list_create", kwargs={"uuid": self.uuid})

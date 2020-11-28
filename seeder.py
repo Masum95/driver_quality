@@ -1,58 +1,42 @@
-import os
-import datetime
-from django.utils import timezone
 
-import django
-# from datetime import datetime, time
-from random import random
-import random
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE",
-                      "driver_quality.settings")
-
-django.setup()
-
+from supply_order import enums
 from supply_order.models import SupplyOrder
-from random import randrange
-from datetime import timedelta
 
-def random_date():
-    """
-    This function will return a random datetime between two datetime
-    objects.
-    """
-    end = timezone.now()
-    start = end - datetime.timedelta(seconds=random.randint(0, 5 * 86400))
-    delta = end - start
-    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
-    random_second = randrange(int_delta)
-    return start + timedelta(seconds=random_second)
+import datetime
 
 
+def create_supply_order(timestamp, supply_id, order_id, status):
+    SupplyOrder.objects.create(
+        timestamp=timestamp,
+        supply_id=supply_id,
+        order_id=order_id,
+        status=status
+    )
 
 
+comp_order_count = [85, 70, 50, 50, 50]
+can_order_count = [25, 40, 50, 30, 0]
+NUM_USERS = len(comp_order_count)  # 5
 
-def getRandomOrderStatus():
-    k = random.randint(0, 1)  # decide on k once
-    if k == 0:
-        return "COM"
-    return "CAN"
+global_order_id = 1
 
+base_date = '2008-05-01 12:01:00'
+base_date = datetime.datetime.strptime(base_date, "%Y-%m-%d %H:%M:%S")
 
-def get_random_driver_id():
-    k1 = random.randint(1000, 1003)  # decide on k once
-    return k1
+for i in range(NUM_USERS):
+    supply_id = i + 1000
+    day_cnt = 0
+    for order in range(comp_order_count[i]):
+        dt = base_date + datetime.timedelta(days=day_cnt)
+        order_id = 'ord' + str(global_order_id)
+        create_supply_order(dt, supply_id, order_id, enums.StatusChoices.COMPLETED)
+        global_order_id += 1
+        day_cnt += 1
 
-def populate_supply_order():
+    for order in range(can_order_count[i]):
+        dt = base_date + datetime.timedelta(days=day_cnt)
+        order_id = 'ord' + str(global_order_id)
+        create_supply_order(dt, supply_id, order_id, enums.StatusChoices.CANCELLED)
+        global_order_id += 1
+        day_cnt += 1
 
-    for i in range(50):
-        SupplyOrder.objects.create(
-            timestamp=random_date(),
-            supply_id=get_random_driver_id(),
-            order_id='order'+str(i),
-            status=getRandomOrderStatus()
-        )
-
-
-if __name__ == "__main__":
-    populate_supply_order()

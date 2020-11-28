@@ -13,13 +13,13 @@ class SupplyQuerySet(QuerySet):
             timestamp__range=[start_time, end_time]
         )
 
-    def get_orders_aginst_supply_id(self, supply_id):
+    def get_orders_against_supply_id(self, supply_id):
         return self.filter(
             supply_id=supply_id
         )
 
     def get_last_n_records(self, n):
-        return self.order_by('-timestamp')[:int(n)]
+        return self.order_by('-id')[:int(n)]
 
     def get_completed(self):
         return self.filter(
