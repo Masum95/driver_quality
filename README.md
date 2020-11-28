@@ -47,7 +47,14 @@ root
 
 Following section assumes you have docker installed on your machine.
 
-Running the **run.sh** script builds the docker image , does necessary django migrations, inserts dummy data and then runs the django dev server @8000 port. Postgres-db port is mapped to **5454** port of localhost. 
+Running the **run.sh** script     
+  
+ - builds the docker image   
+ - does necessary django migrations  
+ - inserts dummy data   
+ - runs the django dev server @8000 port  
+ - runs the client program  
+ Postgres-db port is mapped to **5454** port of localhost. 
  
 To run the script, use the command from terminal:
 
@@ -59,8 +66,5 @@ As client program, a simple python program called
 **client.py** is used. 
 This program continuously takes driver id as input from the user ( until ***q*** is pressed ) and gives corresponding completion rate and message on the terminal. 
 
-To run the program use 
-
-> python3 client.py
-
-
+To run the client program after exiting from it, use command: 
+ > docker exec -it driver_quality_web_1 python client.py

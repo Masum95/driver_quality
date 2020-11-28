@@ -1,7 +1,7 @@
 import requests
 
 how_many_last = str(100)
-
+print('\n-----------------Welcome to Client Program----------------\n')
 while True:
     print('Press q to exit!')
     inp = input().strip()
@@ -14,7 +14,7 @@ while True:
         continue
 
     id = str(id)
-    response = requests.get('http://127.0.0.1:8000/supply_order/count/?supply_id='+id + \
+    response = requests.get('http://localhost:8000/supply_order/count/?supply_id='+id + \
                             '&how_many_last='+how_many_last)
     print(response.status_code)
     if response.status_code == 404:
