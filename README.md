@@ -47,7 +47,8 @@ root
 
 Following section assumes you have docker installed on your machine.
 
-Running the **run.sh** script builds the docker image , does necessary django migrations, inserts dummy data and then runs the django dev server @8000 port. Postgres-db port is mapped to **5454** port of localhost 
+Running the **run.sh** script builds the docker image , does necessary django migrations, inserts dummy data and then runs the django dev server @8000 port. Postgres-db port is mapped to **5454** port of localhost. 
+ 
 To run the script, use the command from terminal:
 
 > ./run.sh
