@@ -1,10 +1,5 @@
 from django.db.models import Q, QuerySet
-from django.contrib.auth import get_user_model
-
-from supply_order import models
 from supply_order import enums
-
-import datetime
 
 
 class SupplyQuerySet(QuerySet):

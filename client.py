@@ -1,6 +1,4 @@
-from django.shortcuts import render
 import requests
-from rest_framework import status
 
 how_many_last = str(100)
 
@@ -19,7 +17,7 @@ while True:
     response = requests.get('http://127.0.0.1:8000/supply_order/count/?supply_id='+id + \
                             '&how_many_last='+how_many_last)
     print(response.status_code)
-    if response.status_code == status.HTTP_404_NOT_FOUND:
+    if response.status_code == 404:
         print(response.json()['error_message'])
         continue
     json_data = response.json()

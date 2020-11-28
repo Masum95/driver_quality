@@ -1,22 +1,15 @@
-from os import getenv
+import json
 
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIRequestFactory
-from supply_order import enums
-from supply_order.models import SupplyOrder
-# from supply_order.tests import test_utils
-# from supply_order.tests.populate_db import UserCreator, create_same_feedback
-from supply_order import views
 
-from datetime import datetime
-from datetime import date, timedelta
-import json
+from supply_order import enums
+from supply_order import views
+from supply_order.models import SupplyOrder
 
 
 def create_supply_order(timestamp, supply_id, order_id, status):
-
     SupplyOrder.objects.create(
         timestamp= timestamp,
         supply_id= supply_id,
@@ -27,7 +20,7 @@ def create_supply_order(timestamp, supply_id, order_id, status):
 
 class SupplyOrderCountTestCase(APITestCase):
     """
-
+        Unit testing for views.supply_order_count function
     """
 
     def setUp(self):

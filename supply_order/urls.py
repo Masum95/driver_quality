@@ -1,4 +1,3 @@
-from django.urls import path
 from supply_order import views
 from django.urls import path
 

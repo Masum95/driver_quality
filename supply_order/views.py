@@ -8,22 +8,9 @@ from supply_order import models, enums
 from supply_order import serializers
 from supply_order import pagination
 from supply_order import parameters
-
+from supply_order import utils
 count_response = openapi.Response('response description', serializers.CountOrderSerializer)
 get_list_response = openapi.Response('response description', serializers.SupplyOrderSerializer)
-
-
-def get_message(percent):
-    if 0 <= percent <= 0.5:
-        return """Your completion rate is very low.You will get suspended if you do not increase your completion 
-        rate. """
-
-    if 0.51 <= percent <= 0.70:
-        return """Your completion rate is low. You will get less requests if you do not increase your completion 
-        rate. """
-
-    if 0.71 <= percent <= 1.0:
-        return """Please complete more to get more requests."""
 
 
 class SupplyOrderListCreateAPIView(generics.ListCreateAPIView):
@@ -57,9 +44,15 @@ class SupplyOrderListCreateAPIView(generics.ListCreateAPIView):
                      responses={200: count_response})
 @api_view(['GET'])
 def supply_order_count(request):
+    """
+        **returns completion rate for a particular user**
+        Accepts two query params, supply_id : int
+                                  how_many_last: int ( how many orders do you want to retrieve)
+    """
     queryset = models.SupplyOrder.objects.all()
     query_params = request.GET
     how_many = str(100)
+
     if 'supply_id' in query_params:
         queryset = queryset.get_orders_against_supply_id(supply_id=query_params.get('supply_id'))
 
@@ -85,4 +78,4 @@ def supply_order_count(request):
         percent = 0.85
 
     return JsonResponse({'percent': percent,
-                         'message': get_message(percent=percent)}, safe=False)
+                         'message': utils.get_message(percent=percent)}, safe=False)

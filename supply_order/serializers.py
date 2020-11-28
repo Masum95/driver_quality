@@ -1,14 +1,6 @@
 
-"""
-.. module:: Feedback Serializer
-
-   :synopsis: All serializer related to Feedback are provided here
-.. moduleauthor:: Masum Rahman
-"""
-
-from django.contrib.auth import get_user_model
-from django.db.models import Count
 from rest_framework import serializers
+
 from supply_order import models
 
 
