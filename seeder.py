@@ -1,4 +1,13 @@
+import os
+import django
+# from datetime import datetime, time
+from random import random
+import random
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE",
+                      "driver_quality.settings")
+
+django.setup()
 from supply_order import enums
 from supply_order.models import SupplyOrder
 
