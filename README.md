@@ -2,7 +2,9 @@
 # driver_quality
 A django based program that gives drivers' feedback according to their completion rate. 
 
-## Basic Project Structrue 
+For design-documentation, please refer to **Design.pdf**
+
+## Basic Project Structure 
 
 ```
 root
@@ -50,6 +52,7 @@ To run the script, use the command from terminal:
 
 > ./run.sh
 
+To learn the distribution of dummy dataset, Please refer to **Design.pdf**
 Now, as the client program, a simple python program called
 **client.py** is used. 
 This program continuously takes driver id as input from the user ( until ***q*** is pressed ) and gives corresponding completion rate and message on the terminal. 
